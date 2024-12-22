@@ -1,4 +1,4 @@
-# RasPike-ART (Almost Real Time)
+# libraspike-art (Raspike Almost Real Time Library)
 
 RasPike-ARTはLEGO® Education SPIKE™ PrimeとRaspberryPiをUSBで接続して、Raspberry上で[SPIKE-RT](https://github.com/spike-rt/spike-rt)のAPIを使ってSPIKEを制御することのできるライブラリです。
 すでに公開されている[RasPike](https://github.com/ETrobocon/RasPike)の後継ですが、以下の点で異なっています。
@@ -154,7 +154,7 @@ RasPike-ARTでは上記のAPIは一部を除いて対応しています。
 - pup_ultrasonic_sensor_presence()  2024/8/23のバージョンから非対応となりました。
 - Bluetooth API
 
-対応しているが、呼ぶとSPIKE-RT側で死んでしまうもの（呼ばないよう注意)
+対応しているが、呼ぶとSPIKE-RT側で死んでしまうもの（呼ばないよう注意) →　デバイスが壊れている時のみかもしれません
 - pup_ultrasonic_sensor_light_set
 - pup_ultrasonic_sensor_light_on
 - pup_ultrasonic_sensor_light_off
