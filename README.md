@@ -42,7 +42,7 @@ git clone https://github.com/ytoi/RasPike-ART.git
 spikeディレクトリに移動します。
 
 ```
-cd RasPike-ART/spike
+cd libraspike-art/spike
 ```
 
 必要なモジュールのインストールを行うため、セットアップのスクリプトを呼び出します。
