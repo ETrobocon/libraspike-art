@@ -27,16 +27,14 @@ RasPikeで使用していたシリアルケーブルは不要です。
 
 # 環境
 
-
-*現在、動作確認はDebian version: 11 (Bullseye)32bit Legacyでのみ行っています。そのほかでも動くかもしれませんが、まだ試していません。RasPikeが動作した環境であればそのまま使えます。*
-
+Debian version: 12 (bookworm) 64bit およびebian version: 11 (Bullseye)32bit Legacyでのみ行っています。そのほかでも動くかもしれませんが、まだ試していません。RasPikeが動作した環境であればそのまま使えます。*
 
 ## 最初の設定
 
 RasberryPi上の任意の場所でGitHubからcloneします。
    
 ```
-git clone https://github.com/ytoi/RasPike-ART.git
+git clone[ https://github.com/ytoi/](https://github.com/ETrobocon/libraspike-art.git
 ```
 
 spikeディレクトリに移動します。
