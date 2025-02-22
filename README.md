@@ -34,7 +34,7 @@ Debian version: 12 (bookworm) 64bit およびebian version: 11 (Bullseye)32bit L
 RasberryPi上の任意の場所でGitHubからcloneします。
    
 ```
-git clone[ https://github.com/ytoi/](https://github.com/ETrobocon/libraspike-art.git
+git clone https://github.com/ETrobocon/libraspike-art.git
 ```
 
 spikeディレクトリに移動します。
