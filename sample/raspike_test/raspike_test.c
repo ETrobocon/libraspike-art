@@ -175,12 +175,12 @@ int main(int argc,char const *argv[])
 
 
   //ultrasonicsensor_test();
-    motor_test();
+  //  motor_test();
   //display_test();
   // light_test();
   //  speaker_test();
   //    motor_test();
-  //colorsensor_test();
+  colorsensor_test();
   
   return 0;
 }
