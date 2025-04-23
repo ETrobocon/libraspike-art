@@ -61,6 +61,21 @@ static int raspike_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   return ret;
 }
 
+static int raspike_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *tm)
+{
+  int ret;
+  do {
+    if ( (ret = pthread_cond_timedwait(cond,mutex,tm)) == 0 ) {
+      break;
+    } else if ( ret == ETIMEDOUT ) {
+      return ret;
+    }
+  } while ( errno == EINTR );
+
+  return ret;
+}
+
+
 static int raspike_cond_signal(pthread_cond_t *cond)
 {
   return pthread_cond_signal(cond);
@@ -340,6 +355,34 @@ int raspike_wait_ack(RasPikePort port, unsigned char cmd) {
 
   return ret;
 }
+
+int raspike_timedwait_ack(RasPikePort port, unsigned char cmd, int waitsec) {
+  ENSURE_VALID_PORT(port);
+  
+  int32_t ret;
+  RPPortDevice *dev = getDevice(port);
+  struct timespec timeout;
+  
+  raspike_mutex_lock(&dev->mutex);
+  while(1) {
+    timeout.tv_sec = time(0) +waitsec;
+    timeout.tv_nsec = 0;
+
+    if ( dev->ack_cmd == cmd )
+      break;
+    if ( raspike_cond_timedwait(&dev->cond,&dev->mutex,&timeout) == ETIMEDOUT ) {
+      raspike_mutex_unlock(&dev->mutex);
+      return ETIMEDOUT;
+    }
+  }
+  // reset ack
+  dev->ack_cmd = 0;
+  ret = dev->ack_data;
+  raspike_mutex_unlock(&dev->mutex);
+
+  return ret;
+}
+
 
 int raspike_wait_port_cmd_change(RasPikePort port, unsigned char wait_cmd)
 {
