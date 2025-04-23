@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 #include <pthread.h>
+#include <errno.h>  
+#include <stdlib.h>
   
   /* TODO: implement */
 #define ENSURE_INIT()
@@ -27,13 +29,18 @@ extern "C" {
   /* MAKE_CMD(type,0) means config*/ \
   char config_cmd = MAKE_CMD(fgDeviceType,0); \
   raspike_prot_send(r_port,config_cmd,0,0);	\
-  int ret = raspike_wait_ack(r_port,config_cmd);	      \
+  int ret = raspike_timedwait_ack(r_port,config_cmd,3);	\
   if ( ret == 1 ) { \
     dev->device.device_type = fgDeviceType; \
     dev->device.port_id = r_port; \
     return (device_t*)&dev->device;		\
+  } else if ( ret == ETIMEDOUT ) {					\
+       printf("port =%c getdevice time out. check port connection\n",port);	\
+       exit(-1); \
+    return (device_t*)0;			\
   } else { \
-    return (device_t*)0; \
+       printf("port =%c getdevice Error. \n",port);	\
+    return (device_t*)0;			\
   } 
   
   
@@ -99,6 +106,7 @@ typedef struct {
   extern int raspike_prot_send(RasPikePort port, unsigned char cmdid, const unsigned char *buf, int size);
 
   extern int raspike_wait_ack(unsigned char port, unsigned char cmd);
+  extern int raspike_timedwait_ack(unsigned char port, unsigned char cmd, int waitsec);
 
   extern int raspike_wait_port_cmd_change(RasPikePort port, unsigned char wait_cmd);
   extern int raspike_port_com_change_if_needed(RasPikePort port, unsigned char wait_cmd); 
