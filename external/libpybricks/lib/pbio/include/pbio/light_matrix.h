@@ -11,6 +11,10 @@
 #ifndef _PBIO_LIGHT_MATRIX_H_
 #define _PBIO_LIGHT_MATRIX_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include <pbio/error.h>
@@ -71,6 +75,10 @@ static inline void pbio_light_matrix_stop_animation(pbio_light_matrix_t *light_m
 }
 
 #endif // PBIO_CONFIG_LIGHT_MATRIX
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_LIGHT_MATRIX_H_
 

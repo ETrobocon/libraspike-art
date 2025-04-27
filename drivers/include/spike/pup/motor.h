@@ -32,6 +32,10 @@
 #ifndef _PUP_MOTOR_H_
 #define _PUP_MOTOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <pbio/port.h>
 #include <pbio/servo.h>
 
@@ -244,6 +248,10 @@ int32_t pup_motor_set_duty_limit(pup_motor_t *motor, int duty_limit);
  * \param old_value pup_motor_set_duty_limitの戻り値．
  */
 void pup_motor_restore_duty_limit(pup_motor_t *motor, int old_value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PUP_MOTOR_H_
 

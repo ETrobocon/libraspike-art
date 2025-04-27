@@ -32,6 +32,10 @@
 #ifndef _HUB_BATTERY_H_
 #define _HUB_BATTERY_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \~English
  * \brief    Retrieve the battery voltage.
@@ -53,6 +57,10 @@ uint16_t hub_battery_get_voltage(void);
  * \return   電流 [mA]． 
  */
 uint16_t hub_battery_get_current(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _HUB_BATTERY_H_
 

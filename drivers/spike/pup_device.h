@@ -10,6 +10,9 @@
  *                                                          Graduate School of Information Science, Nagoya Univ., JAPAN
  * Modifications for RasPike2 (c)2024 Yuki.Tsuchitoi
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <pbio/color.h>
 #include <pbio/error.h>
@@ -17,5 +20,9 @@
 
 struct _pup_device_t;
 typedef struct _pup_device_t pup_device_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

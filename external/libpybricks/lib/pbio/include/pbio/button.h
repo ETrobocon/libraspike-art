@@ -11,6 +11,10 @@
 #ifndef _PBIO_BUTTON_H_
 #define _PBIO_BUTTON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <pbio/error.h>
 #include <pbio/port.h>
 
@@ -123,6 +127,10 @@ pbio_error_t pbio_button_is_pressed(pbio_button_flags_t *pressed);
 //#include <pbdrv/button.h>
 
 #endif // DOXYGEN
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_BUTTON_H_
 

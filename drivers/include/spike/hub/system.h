@@ -34,6 +34,10 @@
 #ifndef _HUB_SYSTEM_H_
 #define _HUB_SYSTEM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -46,6 +50,11 @@
  * \details     標準ライブラリexit(0)と同じ．CPUロック状態から呼び出してはいけない．
  */
 void hub_system_shutdown(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif // _HUB_SYSTEM_H_
 

@@ -33,6 +33,10 @@
 #ifndef _PUP_COLOR_SENSOR_H_
 #define _PUP_COLOR_SENSOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <spike/pup_device.h>
 #include <pbio/color.h>
@@ -191,6 +195,10 @@ pbio_error_t pup_color_sensor_light_off(pup_device_t *pdev);
  */
 pup_color_hsv_t *pup_color_sensor_detectable_colors(int32_t size, pup_color_hsv_t *colors);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif // _PUP_COLOR_SENSOR_H_
 
 /**
@@ -199,4 +207,3 @@ pup_color_hsv_t *pup_color_sensor_detectable_colors(int32_t size, pup_color_hsv_
 
 /**
  * @} // End of group
- */

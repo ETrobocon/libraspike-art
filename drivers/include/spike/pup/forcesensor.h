@@ -33,6 +33,10 @@
 #ifndef _PUP_FORCE_SENSOR_H_
 #define _PUP_FORCE_SENSOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <spike/pup_device.h>
 
@@ -109,6 +113,10 @@ bool pup_force_sensor_pressed(pup_device_t *pdev, float force);
  * \return	false	押されていない。
  */
 bool pup_force_sensor_touched(pup_device_t *pdev);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PUP_FORCE_SENSOR_H_
 

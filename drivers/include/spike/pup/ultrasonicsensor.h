@@ -34,6 +34,10 @@
 #ifndef _PUP_ULTRASONIC_SENSOR_H_
 #define _PUP_ULTRASONIC_SENSOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <spike/pup_device.h>
 
@@ -128,6 +132,10 @@ pbio_error_t pup_ultrasonic_sensor_light_on(pup_device_t *pdev);
  * \retval err  エラー番号．
  */
 pbio_error_t pup_ultrasonic_sensor_light_off(pup_device_t *pdev);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PUP_ULTRASONIC_SENSOR_H_
 

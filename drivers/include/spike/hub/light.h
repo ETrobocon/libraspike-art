@@ -34,6 +34,10 @@
 #ifndef _HUB_LIGHT_H_
 #define _HUB_LIGHT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <pbio/error.h>
 #include <pbio/color.h>
@@ -74,6 +78,10 @@ pbio_error_t hub_light_on_color(pbio_color_t color);
  * \retval err  エラー番号．
  */
 pbio_error_t hub_light_off(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _HUB_LIGHT_H_
 

@@ -13,6 +13,10 @@
 #ifndef _PBIO_PORT_H_
 #define _PBIO_PORT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -61,6 +65,10 @@ typedef enum {
     PBIO_PORT_ID_4 = '4', /**< I/O port labeled as "4" */
     #endif
 } pbio_port_id_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_PORT_H_
 

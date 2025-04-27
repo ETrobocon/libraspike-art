@@ -35,6 +35,10 @@
 #ifndef _HUB_IMU_H_
 #define _HUB_IMU_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <pbio/error.h>
 
@@ -83,6 +87,10 @@ void hub_imu_get_angular_velocity(float angv[3]);
  * \retval      温度 [℃]．
  */
 float hub_imu_get_temperature(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _HUB_IMU_H_
 

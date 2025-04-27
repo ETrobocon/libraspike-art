@@ -32,6 +32,12 @@
 #ifndef _HUB_SPEAKER_H_
 #define _HUB_SPEAKER_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define SOUND_MANUAL_STOP (-1)
 #define NOTE_C4           ( 261.63)
 #define NOTE_CS4          ( 277.18)
@@ -102,6 +108,11 @@ void hub_speaker_play_tone(uint16_t frequency, int32_t duration);
  * \brief 再生中のサウンドを停止する.
  */
 void hub_speaker_stop(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif // _HUB_SPEAKER_H_
 

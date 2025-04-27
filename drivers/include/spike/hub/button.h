@@ -32,9 +32,15 @@
 #ifndef _HUB_BUTTON_H_
 #define _HUB_BUTTON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <pbio/button.h>
 #include <pbio/error.h>
+
+
 
 /**
  * \~English
@@ -63,6 +69,10 @@ typedef enum _hub_button_t {
  */
 pbio_error_t hub_button_is_pressed(hub_button_t *pressed);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif // _HUB_BUTTON_H_
 
 /**
@@ -71,4 +81,4 @@ pbio_error_t hub_button_is_pressed(hub_button_t *pressed);
 
 /**
  * @} // End of group
- */
+ 

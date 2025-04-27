@@ -11,6 +11,10 @@
 #ifndef _PBIO_DCMOTOR_H_
 #define _PBIO_DCMOTOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -96,6 +100,10 @@ static inline pbio_error_t pbio_dcmotor_user_command(pbio_dcmotor_t *dcmotor, bo
 #endif
 
 #endif // PBIO_CONFIG_DCMOTOR
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_DCMOTOR_H_
 

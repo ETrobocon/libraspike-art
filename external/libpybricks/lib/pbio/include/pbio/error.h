@@ -10,6 +10,10 @@
 #ifndef _PBIO_ERROR_H_
 #define _PBIO_ERROR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Error code.
  */
@@ -29,6 +33,10 @@ typedef enum {
 } pbio_error_t;
 
 const char *pbio_error_str(pbio_error_t err);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_ERROR_H_
 

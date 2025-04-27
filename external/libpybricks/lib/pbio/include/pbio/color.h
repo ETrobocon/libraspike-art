@@ -11,6 +11,10 @@
 #ifndef _PBIO_COLOR_H_
 #define _PBIO_COLOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /** @cond INTERNAL */
@@ -112,6 +116,10 @@ void pbio_color_to_hsv(pbio_color_t color, pbio_color_hsv_t *hsv);
 void pbio_color_to_rgb(pbio_color_t color, pbio_color_rgb_t *rgb);
 void pbio_color_hsv_compress(const pbio_color_hsv_t *hsv, pbio_color_compressed_hsv_t *compressed);
 void pbio_color_hsv_expand(const pbio_color_compressed_hsv_t *compressed, pbio_color_hsv_t *hsv);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _PBIO_COLOR_H_
 
