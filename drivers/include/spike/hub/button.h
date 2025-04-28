@@ -81,4 +81,5 @@ pbio_error_t hub_button_is_pressed(hub_button_t *pressed);
 
 /**
  * @} // End of group
+*/
  
