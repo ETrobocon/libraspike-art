@@ -207,3 +207,4 @@ pup_color_hsv_t *pup_color_sensor_detectable_colors(int32_t size, pup_color_hsv_
 
 /**
  * @} // End of group
+ */
