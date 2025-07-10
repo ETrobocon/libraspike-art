@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include "raspike_com.h"
 #include "raspike_protocol_api.h"
+#include "raspike_additional_api.h"
 
 #include "spike/pup/motor.h"
 #include "spike/pup/colorsensor.h"
@@ -141,7 +142,7 @@ void speaker_test(void)
 void colorsensor_test(void)
 {
   int i = 0;
-  pup_device_t *col = pup_color_sensor_get_device(PBIO_PORT_ID_C);
+  pup_device_t *col = pup_color_sensor_get_device(PBIO_PORT_ID_E);
 
   while ( i < 100 ) {
 
@@ -153,6 +154,26 @@ void colorsensor_test(void)
   }
 
 }
+
+void imu_test(void) {
+  float imu_ang[3];
+
+  for (int i = 0; i < 2; i++) { // 2 cycles
+    pbio_error_t err = hub_imu_reset_angular();
+    if (err == PBIO_SUCCESS) {
+      printf("hub_imu_reset_angular() completed\n");
+      for (int j = 0; j < 60; j++) { // 60 seconds
+        hub_imu_get_angular(imu_ang);
+        printf("[imu ang] x=%f y=%f z=%f\n",
+          imu_ang[0],imu_ang[1],imu_ang[2]);
+        sleep(1);
+      }
+    } else {
+      printf("hub_imu_reset_angular() failed with %d\n", err);
+    }
+  }
+}
+
 
 int main(int argc,char const *argv[])
 {
@@ -180,7 +201,8 @@ int main(int argc,char const *argv[])
   // light_test();
   //  speaker_test();
   //    motor_test();
-  colorsensor_test();
+  //colorsensor_test();
+  imu_test();
   
   return 0;
 }

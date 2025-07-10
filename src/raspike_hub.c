@@ -6,6 +6,7 @@
 #include "raspike_protocol_api.h"
 #include "raspike_protocol_com.h"
 #include "raspike_internal.h"
+#include "raspike_additional_api.h"
 #include "error.h"
 #include "button.h"
 #include "battery.h"
@@ -141,6 +142,19 @@ void hub_imu_get_angular_velocity(float angv[3])
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
   memcpy(angv,status->angular_velocity,sizeof(float)*3);
+}
+
+void hub_imu_get_angular(float ang[3])
+{
+  RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
+  memcpy(ang,status->angular,sizeof(float)*3);
+}
+
+pbio_error_t hub_imu_reset_angular(void)
+{
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_RST_ANG,0,0);
+
+  return PBIO_SUCCESS;
 }
 
 float hub_imu_get_temperature(void)
