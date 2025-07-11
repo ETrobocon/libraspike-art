@@ -6,5 +6,5 @@ INCLUDES += -I$(SRC_DIR)
 
 OPT=-g -O2
 
-
+APPL_LIBS += -lm
 

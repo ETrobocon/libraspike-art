@@ -132,7 +132,7 @@
 #define RP_CMD_ID_HUB_SPK_SET_VOL (MAKE_CMD(RP_CMD_TYPE_HUB,0x11)) // 0xb1
 #define RP_CMD_ID_HUB_SPK_PLY_TON (MAKE_CMD(RP_CMD_TYPE_HUB,0x12)) // 0xb2
 #define RP_CMD_ID_HUB_SPK_STP (MAKE_CMD(RP_CMD_TYPE_HUB,0x13)) // 0xb3
-#define RP_CMD_ID_HUB_RST_ANG (MAKE_CMD(RP_CMD_TYPE_HUB,0x14)) // 0xb4
+#define RP_CMD_ID_HUB_IMU_INIT (MAKE_CMD(RP_CMD_TYPE_HUB,0x14)) // 0xb4
 
 /* Hub cmd protocol
   RP_CMD_ID_HUB_DISP_PIX
@@ -170,6 +170,21 @@
 #define RP_HUB_SPK_PLY_TON_INDEX_DUR (0)
 #define RP_HUB_SPK_PLY_TON_INDEX_FRQ (4)
 
+/* Hub cmd protocol
+  RP_CMD_ID_HUB_IMU_INIT
+  data[ 0]-[ 3] : gyro_stationary_threshold (float)
+  data[ 4]-[ 7] : accel_stationary_threshold (float)
+  data[ 8]-[19] : angular_velocity_bias (float[3])
+  data[20]-[31] : angular_velocity_scale (float[3])
+  data[32]-[55] : acceleration_correction (float[6])
+*/
+#define RP_HUB_IMU_INIT_INDEX_GYRO_STAT_THRESH (0)
+#define RP_HUB_IMU_INIT_INDEX_ACCEL_STAT_THRESH (4)
+#define RP_HUB_IMU_INIT_INDEX_ANGV_BIAS (8)
+#define RP_HUB_IMU_INIT_INDEX_ANGV_SCALE (20)
+#define RP_HUB_IMU_INIT_INDEX_ACCEL_CORRECT (32)
+
+
 /* In SPIKE-RT, ID port is defined as 'A' to 'F'. 
    RasPike treat them as 0 to 5 
    PORT_TO_RASPIKE and PORT_FROM_RASPIKE are used for this conversion.*/
@@ -195,7 +210,8 @@ typedef struct _rp_protocol_spike_status {
     uint16_t current;
     float acceleration[3];
     float angular_velocity[3];
-    float angular[3];
+    float rotation_matrix[3*3];
+    float heading;
     uint32_t button;
     RPProtocolPortStatus ports[6];
 } RPProtocolSpikeStatus;

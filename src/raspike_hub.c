@@ -144,15 +144,34 @@ void hub_imu_get_angular_velocity(float angv[3])
   memcpy(angv,status->angular_velocity,sizeof(float)*3);
 }
 
-void hub_imu_get_angular(float ang[3])
+void hub_imu_get_orientation(float rotation_matrix[3*3])
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
-  memcpy(ang,status->angular,sizeof(float)*3);
+  memcpy(rotation_matrix,status->rotation_matrix,sizeof(float)*3*3);
 }
 
-pbio_error_t hub_imu_reset_angular(void)
+float hub_imu_get_heading(void)
 {
-  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_RST_ANG,0,0);
+  RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
+  return status->heading;
+}
+
+pbio_error_t hub_imu_initialize_by_default(void)
+{
+  return hub_imu_initialize(2.0, 2500.0, (float[]){0, 0, 0}, (float[]){360, 360, 360},
+    (float[]){9806.65, -9806.65, 9806.65, -9806.65, 9806.65, -9806.65});
+}
+
+pbio_error_t hub_imu_initialize(float gyro_stationary_threshold, float accel_stationary_threshold,
+    float angular_velocity_bias[3], float angular_velocity_scale[3], float acceleration_correction[6])
+{
+  unsigned char param[(1+1+3+3+6) * sizeof(float)];
+  *(float*)(param+RP_HUB_IMU_INIT_INDEX_GYRO_STAT_THRESH) = gyro_stationary_threshold;
+  *(float*)(param+RP_HUB_IMU_INIT_INDEX_ACCEL_STAT_THRESH) = accel_stationary_threshold;
+  memcpy(param+RP_HUB_IMU_INIT_INDEX_ANGV_BIAS,angular_velocity_bias,3*sizeof(float));
+  memcpy(param+RP_HUB_IMU_INIT_INDEX_ANGV_SCALE,angular_velocity_scale,3*sizeof(float));
+  memcpy(param+RP_HUB_IMU_INIT_INDEX_ACCEL_CORRECT,acceleration_correction,6*sizeof(float));
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_IMU_INIT,param,sizeof(param));
 
   return PBIO_SUCCESS;
 }

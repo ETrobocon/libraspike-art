@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <unistd.h>
 #include <pthread.h>
 #include "raspike_com.h"
@@ -156,21 +157,26 @@ void colorsensor_test(void)
 }
 
 void imu_test(void) {
-  float imu_ang[3];
+  float accel[3], angv[3];
+  float rot[3*3];
+  float heading;
 
-  for (int i = 0; i < 2; i++) { // 2 cycles
-    pbio_error_t err = hub_imu_reset_angular();
-    if (err == PBIO_SUCCESS) {
-      printf("hub_imu_reset_angular() completed\n");
-      for (int j = 0; j < 60; j++) { // 60 seconds
-        hub_imu_get_angular(imu_ang);
-        printf("[imu ang] x=%f y=%f z=%f\n",
-          imu_ang[0],imu_ang[1],imu_ang[2]);
-        sleep(1);
-      }
-    } else {
-      printf("hub_imu_reset_angular() failed with %d\n", err);
-    }
+  hub_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
+    (float[]){10016.18, -9657.935, 9823.967, -9957.187, 9766.231, -9970.058});
+  //hub_imu_initialize_by_default();
+
+  for (int j = 0; j < 60; j++) { // 60 seconds
+    hub_imu_get_acceleration(accel);
+    hub_imu_get_angular_velocity(angv);
+    printf("[accel(mm/s²)] x=%f y=%f z=%f [angv(deg/s)] x=%f y=%f z=%f\n",
+          accel[0],accel[1],accel[2],angv[0],angv[1],angv[2]);
+    hub_imu_get_orientation(rot);
+    printf("[rot mat(deg)] m11=%f m12=%f m13=%f m21=%f m22=%f m23=%f m31=%f m32=%f m33=%f\n",
+          rot[0],rot[1],rot[2],rot[3],rot[4],rot[5],rot[6],rot[7],rot[8]);
+    heading = hub_imu_get_heading();
+    printf("[heading] %f\n",
+          heading);
+    sleep(1);
   }
 }
 
