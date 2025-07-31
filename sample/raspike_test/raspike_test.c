@@ -174,12 +174,101 @@ void imu_test(void) {
     printf("[rot mat(deg)] m11=%f m12=%f m13=%f m21=%f m22=%f m23=%f m31=%f m32=%f m33=%f\n",
           rot[0],rot[1],rot[2],rot[3],rot[4],rot[5],rot[6],rot[7],rot[8]);
     heading = hub_imu_get_heading();
-    printf("[heading] %f\n",
-          heading);
+    printf("[heading] %f\n",heading);
     sleep(1);
   }
 }
 
+#define LOOP_DELAY_US 10000  // 10 ms loop
+#define SQUARE_SIDES 8
+#define KP 1.2
+#define KI 0.001
+#define KD 0.02
+#define MAX_POWER 100
+#define BASE_POWER 55
+#define MIN_POWER 30
+
+float pid_control(float target, float current, float *integral, float *last_error) {
+  float error = target - current;
+  *integral += error * (LOOP_DELAY_US / 1000000.0f);
+  float derivative = (error - *last_error) / (LOOP_DELAY_US / 1000000.0f);
+  *last_error = error;
+  return KP * error + KI * (*integral) + KD * derivative;
+}
+
+float clamp(float power) {
+    if (power >= 0) {
+        if (power > MAX_POWER) return MAX_POWER;
+        if (power < MIN_POWER) return MIN_POWER;
+    } else {
+        if (power < -MAX_POWER) return -MAX_POWER;
+        if (power > -MIN_POWER) return -MIN_POWER;
+    }
+    return power;
+}
+
+void drive_straight(pup_motor_t *right, pup_motor_t *left, float duration_sec, float target_heading) {
+  float integral = 0.0;
+  float last_error = 0.0;
+  float time_start = (float)clock() / CLOCKS_PER_SEC;
+
+  while (((float)clock() / CLOCKS_PER_SEC) - time_start < duration_sec) {
+    float current_heading = hub_imu_get_heading();
+    float correction = pid_control(target_heading, current_heading, &integral, &last_error);
+
+    int left_power = clamp(BASE_POWER + correction);
+    int right_power = clamp(BASE_POWER - correction);
+
+    pup_motor_set_power(right,right_power);
+    pup_motor_set_power(left,left_power);
+    usleep(LOOP_DELAY_US);
+  }
+  pup_motor_stop(right);
+  pup_motor_stop(left);
+}
+
+void turn_to_heading(pup_motor_t *right, pup_motor_t *left, float target_heading) {
+  float integral = 0.0;
+  float last_error = 0.0;
+
+  while (true) {
+    float current_heading = hub_imu_get_heading();
+    float error = target_heading - current_heading;
+    // normalize error to [-180, 180]
+    if (error > 180) error -= 360;
+    if (error < -180) error += 360;
+    if (fabs(error) < 1.0) break;
+
+    float power = clamp(pid_control(target_heading, current_heading, &integral, &last_error));
+
+    pup_motor_set_power(right,-power);
+    pup_motor_set_power(left,power);
+    usleep(LOOP_DELAY_US);
+  }
+}
+
+void imu_run_test(void) {
+  hub_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
+    (float[]){10016.18, -9657.935, 9823.967, -9957.187, 9766.231, -9970.058});
+  //hub_imu_initialize_by_default();
+  pup_motor_t *right = pup_motor_get_device(PBIO_PORT_ID_A);  
+  pup_motor_t *left  = pup_motor_get_device(PBIO_PORT_ID_B);  
+  pbio_error_t err= pup_motor_setup(right,PUP_DIRECTION_CLOCKWISE,true);
+  err= pup_motor_setup(left,PUP_DIRECTION_COUNTERCLOCKWISE,true);
+  float heading = hub_imu_get_heading();
+  printf("[heading] initial    = %f\n",heading);
+
+  for (int i = 0; i < SQUARE_SIDES; i++) {
+    drive_straight(right, left, 3.0, heading); // 3 seconds straight
+    heading = hub_imu_get_heading();
+    printf("[heading] before turn= %f\n",heading);
+    turn_to_heading(right, left, heading+90);
+    heading = hub_imu_get_heading();
+    printf("[heading] after turn = %f\n",heading);
+  }
+  pup_motor_stop(right);
+  pup_motor_stop(left);
+}
 
 int main(int argc,char const *argv[])
 {
@@ -208,7 +297,8 @@ int main(int argc,char const *argv[])
   //  speaker_test();
   //    motor_test();
   //colorsensor_test();
-  imu_test();
+  //imu_test();
+  imu_run_test();
   
   return 0;
 }
