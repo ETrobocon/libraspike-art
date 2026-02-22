@@ -6,7 +6,7 @@
 #include "raspike_protocol_api.h"
 #include "raspike_protocol_com.h"
 #include "raspike_internal.h"
-#include "raspike_additional_api.h"
+#include "raspike_imu.h"
 #include "error.h"
 #include "button.h"
 #include "battery.h"
@@ -132,40 +132,53 @@ pbio_error_t hub_imu_init(void)
   return PBIO_SUCCESS;
 }
 
-void hub_imu_get_acceleration(float accel[3])
+void raspike_imu_get_acceleration(float accel[3])
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
   memcpy(accel,status->acceleration,sizeof(float)*3);
 }
 
-void hub_imu_get_angular_velocity(float angv[3])
+void raspike_imu_get_angular_velocity(float angv[3])
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
   memcpy(angv,status->angular_velocity,sizeof(float)*3);
 }
 
-void hub_imu_get_orientation(float rotation_matrix[3*3])
+void raspike_imu_get_orientation(float rotation_matrix[3*3])
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
   memcpy(rotation_matrix,status->rotation_matrix,sizeof(float)*3*3);
 }
 
-float hub_imu_get_heading(void)
+float raspike_imu_get_heading(void)
 {
   RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
   return status->heading;
 }
 
-pbio_error_t hub_imu_initialize_by_default(void)
+pbio_error_t raspike_imu_initialize_by_default(void)
 {
-  return hub_imu_initialize(2.0, 2500.0, (float[]){0, 0, 0}, (float[]){360, 360, 360},
-    (float[]){9806.65, -9806.65, 9806.65, -9806.65, 9806.65, -9806.65});
+  unsigned char param[sizeof(uint8_t)];
+  *(uint8_t*)(param+RP_HUB_IMU_INIT_INDEX_TYPE) = RP_HUB_IMU_INIT_DFLT;
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_IMU_INIT,param,sizeof(param));
+
+  return PBIO_SUCCESS;
 }
 
-pbio_error_t hub_imu_initialize(float gyro_stationary_threshold, float accel_stationary_threshold,
+pbio_error_t raspike_imu_initialize_by_flash(void)
+{
+  unsigned char param[sizeof(uint8_t)];
+  *(uint8_t*)(param+RP_HUB_IMU_INIT_INDEX_TYPE) = RP_HUB_IMU_INIT_FLSH;
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_IMU_INIT,param,sizeof(param));
+
+  return PBIO_SUCCESS;
+}
+
+pbio_error_t raspike_imu_initialize(float gyro_stationary_threshold, float accel_stationary_threshold,
     float angular_velocity_bias[3], float angular_velocity_scale[3], float acceleration_correction[6])
 {
-  unsigned char param[(1+1+3+3+6) * sizeof(float)];
+  unsigned char param[sizeof(uint8_t) + (1+1+3+3+6) * sizeof(float)];
+  *(uint8_t*)(param+RP_HUB_IMU_INIT_INDEX_TYPE) = RP_HUB_IMU_INIT_CSTM;
   *(float*)(param+RP_HUB_IMU_INIT_INDEX_GYRO_STAT_THRESH) = gyro_stationary_threshold;
   *(float*)(param+RP_HUB_IMU_INIT_INDEX_ACCEL_STAT_THRESH) = accel_stationary_threshold;
   memcpy(param+RP_HUB_IMU_INIT_INDEX_ANGV_BIAS,angular_velocity_bias,3*sizeof(float));

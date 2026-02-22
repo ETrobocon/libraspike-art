@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include "raspike_com.h"
 #include "raspike_protocol_api.h"
-#include "raspike_additional_api.h"
+#include "raspike_imu.h"
 
 #include "spike/pup/motor.h"
 #include "spike/pup/colorsensor.h"
@@ -161,19 +161,20 @@ void imu_test(void) {
   float rot[3*3];
   float heading;
 
-  hub_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
-    (float[]){10016.18, -9657.935, 9823.967, -9957.187, 9766.231, -9970.058});
-  //hub_imu_initialize_by_default();
+  //raspike_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
+  //  (float[]){10016.18, -9657.935, 9823.967, -9957.187, 9766.231, -9970.058});
+  //raspike_imu_initialize_by_default();
+  raspike_imu_initialize_by_flash();
 
   for (int j = 0; j < 60; j++) { // 60 seconds
-    hub_imu_get_acceleration(accel);
-    hub_imu_get_angular_velocity(angv);
+    raspike_imu_get_acceleration(accel);
+    raspike_imu_get_angular_velocity(angv);
     printf("[accel(mm/s²)] x=%f y=%f z=%f [angv(deg/s)] x=%f y=%f z=%f\n",
           accel[0],accel[1],accel[2],angv[0],angv[1],angv[2]);
-    hub_imu_get_orientation(rot);
+    raspike_imu_get_orientation(rot);
     printf("[rot mat(deg)] m11=%f m12=%f m13=%f m21=%f m22=%f m23=%f m31=%f m32=%f m33=%f\n",
           rot[0],rot[1],rot[2],rot[3],rot[4],rot[5],rot[6],rot[7],rot[8]);
-    heading = hub_imu_get_heading();
+    heading = raspike_imu_get_heading();
     printf("[heading] %f\n",heading);
     sleep(1);
   }
@@ -213,7 +214,7 @@ void drive_straight(pup_motor_t *right, pup_motor_t *left, float duration_sec, f
   float time_start = (float)clock() / CLOCKS_PER_SEC;
 
   while (((float)clock() / CLOCKS_PER_SEC) - time_start < duration_sec) {
-    float current_heading = hub_imu_get_heading();
+    float current_heading = raspike_imu_get_heading();
     float correction = pid_control(target_heading, current_heading, &integral, &last_error);
 
     int left_power = clamp(BASE_POWER + correction);
@@ -232,7 +233,7 @@ void turn_to_heading(pup_motor_t *right, pup_motor_t *left, float target_heading
   float last_error = 0.0;
 
   while (true) {
-    float current_heading = hub_imu_get_heading();
+    float current_heading = raspike_imu_get_heading();
     float error = target_heading - current_heading;
     // normalize error to [-180, 180]
     if (error > 180) error -= 360;
@@ -248,22 +249,23 @@ void turn_to_heading(pup_motor_t *right, pup_motor_t *left, float target_heading
 }
 
 void imu_run_test(void) {
-  hub_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
+  raspike_imu_initialize(2.0, 2500.0, (float[]){-1.61239, -1.485107, -0.2945677}, (float[]){360.4545, 356.9208, 363.781},
     (float[]){10016.18, -9657.935, 9823.967, -9957.187, 9766.231, -9970.058});
-  //hub_imu_initialize_by_default();
+  //raspike_imu_initialize_by_default();
+  //raspike_imu_initialize_by_flash();
   pup_motor_t *right = pup_motor_get_device(PBIO_PORT_ID_A);  
   pup_motor_t *left  = pup_motor_get_device(PBIO_PORT_ID_B);  
   pbio_error_t err= pup_motor_setup(right,PUP_DIRECTION_CLOCKWISE,true);
   err= pup_motor_setup(left,PUP_DIRECTION_COUNTERCLOCKWISE,true);
-  float heading = hub_imu_get_heading();
+  float heading = raspike_imu_get_heading();
   printf("[heading] initial    = %f\n",heading);
 
   for (int i = 0; i < SQUARE_SIDES; i++) {
     drive_straight(right, left, 3.0, heading); // 3 seconds straight
-    heading = hub_imu_get_heading();
+    heading = raspike_imu_get_heading();
     printf("[heading] before turn= %f\n",heading);
     turn_to_heading(right, left, heading+90);
-    heading = hub_imu_get_heading();
+    heading = raspike_imu_get_heading();
     printf("[heading] after turn = %f\n",heading);
   }
   pup_motor_stop(right);
@@ -297,8 +299,8 @@ int main(int argc,char const *argv[])
   //  speaker_test();
   //    motor_test();
   //colorsensor_test();
-  //imu_test();
-  imu_run_test();
+  imu_test();
+  //imu_run_test();
   
   return 0;
 }

@@ -172,18 +172,23 @@
 
 /* Hub cmd protocol
   RP_CMD_ID_HUB_IMU_INIT
-  data[ 0]-[ 3] : gyro_stationary_threshold (float)
-  data[ 4]-[ 7] : accel_stationary_threshold (float)
-  data[ 8]-[19] : angular_velocity_bias (float[3])
-  data[20]-[31] : angular_velocity_scale (float[3])
-  data[32]-[55] : acceleration_correction (float[6])
+  data[ 0]      : initialization type (0: default, 1: flash, 2: custom)
+  data[ 1]-[ 4] : gyro_stationary_threshold (float)
+  data[ 5]-[ 8] : accel_stationary_threshold (float)
+  data[ 9]-[20] : angular_velocity_bias (float[3])
+  data[21]-[32] : angular_velocity_scale (float[3])
+  data[33]-[56] : acceleration_correction (float[6])
 */
-#define RP_HUB_IMU_INIT_INDEX_GYRO_STAT_THRESH (0)
-#define RP_HUB_IMU_INIT_INDEX_ACCEL_STAT_THRESH (4)
-#define RP_HUB_IMU_INIT_INDEX_ANGV_BIAS (8)
-#define RP_HUB_IMU_INIT_INDEX_ANGV_SCALE (20)
-#define RP_HUB_IMU_INIT_INDEX_ACCEL_CORRECT (32)
+#define RP_HUB_IMU_INIT_INDEX_TYPE (0)
+#define RP_HUB_IMU_INIT_INDEX_GYRO_STAT_THRESH (1)
+#define RP_HUB_IMU_INIT_INDEX_ACCEL_STAT_THRESH (5)
+#define RP_HUB_IMU_INIT_INDEX_ANGV_BIAS (9)
+#define RP_HUB_IMU_INIT_INDEX_ANGV_SCALE (21)
+#define RP_HUB_IMU_INIT_INDEX_ACCEL_CORRECT (33)
 
+#define RP_HUB_IMU_INIT_DFLT (0)
+#define RP_HUB_IMU_INIT_FLSH (1)
+#define RP_HUB_IMU_INIT_CSTM (2)
 
 /* In SPIKE-RT, ID port is defined as 'A' to 'F'. 
    RasPike treat them as 0 to 5 
