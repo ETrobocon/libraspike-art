@@ -149,7 +149,35 @@ float hub_imu_get_temperature(void)
   // Not Supported
   return 0.0;
 }
-  
+
+bool hub_imu_is_ready(void)
+{
+  RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
+  return status->is_ready;
+}
+
+bool hub_imu_is_stationary(void)
+{
+  RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
+  return status->is_statinary;
+}
+
+void hub_imu_set_tilt(float angle)
+{
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_IMU_SET_TLT,(unsigned char*)&angle,sizeof(angle));
+}
+
+float hub_imu_get_heading(void)
+{
+  RPProtocolSpikeStatus *status = raspike_prot_get_saved_status();
+  return status->heading;
+}
+
+void hub_imu_reset_heading(void)
+{
+  raspike_prot_send(RP_PORT_NONE,RP_CMD_ID_HUB_IMU_RST_HDG,0,0);
+}
+
 /* Light */
 pbio_error_t hub_light_on_hsv(const pbio_color_hsv_t *hsv)
 {
