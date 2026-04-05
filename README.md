@@ -16,6 +16,7 @@ RasPike-ARTはLEGO® Education SPIKE™ PrimeとRaspberryPiをUSBで接続して
 
 | SPIKE ver | date | 更新内容 |
 | --------- | ---- | ------ |
+| 0.1.0 | 2026.4.06 | IMUのAPIを追加しました |
 | 0.0.6 | 2024.8.23 | 超音波センサーを初期化するとSPIKE側の周期が遅くなる問題(#10)に対応しました。これにともない、pup_ultrasonic_sensor_presence()は非サポートのAPIとなりました（必要な方がいたらお知らせください） |
 
 
@@ -143,9 +144,8 @@ make
 
 # SPIKEのAPI対応
 SPIKE-RTのAPIは以下を参照してください。
-[SPIKE-RT APIのページ](https://spike-rt.github.io/spike-rt/en/html/index.html)
-
-RasPike-ARTでは上記のAPIは一部を除いて対応しています。
+2026.04.06　追記　IMUのAPIが追加されています。
+https://shimojima.github.io/spike-rt/ja/html/topics.html
 
 非対応API
 - pup_color_sensor_detectable_colors(そのうち対応予定)
@@ -166,6 +166,10 @@ RasPike-ARTでは上記のAPIは一部を除いて対応しています。
 ## 電源の落とし方
 先にRasberryPi側のコンソールでctrl+cを押し、プログラムを中断して下さい。その後、SPIKEのセンターボタンを長押しして電源を切って下さい。
 この手順でやらないとUSBポートが変わったり、使えなくなったりします。
+
+## IMUのキャリブレーション
+IMUの調整はやらなくても概ね大丈夫なようには設定されていますが、調整を行いたい場合は下記を参照してキャリブレーションを実施することができます。
+https://github.com/pybricks/support/issues/1907
 
 
 # オリジナルのアプリを作る
@@ -252,5 +256,7 @@ raspike_protocol_api.h
 
 # SPIKE側のコード
 　SPIKEのコードはspike-rtをフォークした場所で作っています。
- https://github.com/ytoi/spike-rt.git
- （まだコミットが不完全なので、cloneしても動作しないと思います)
+https://github.com/ETrobocon/spike-rt-RasPike-ART
+
+sdk/workspace/raspike
+をmakeしてできるasp.binになります。
